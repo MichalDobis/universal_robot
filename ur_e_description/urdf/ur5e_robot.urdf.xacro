@@ -8,6 +8,9 @@
   <!-- ur5e -->
   <xacro:include filename="$(find ur_e_description)/urdf/ur5e.urdf.xacro" />
 
+  <!--Collision objects-->
+  <xacro:include filename="$(find ur_e_description)/urdf/collision_objects.xacro" />
+
   <!-- arm -->
   <xacro:ur5e_robot prefix="" joint_limited="false"/>
 

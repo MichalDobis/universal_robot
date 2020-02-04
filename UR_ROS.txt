@@ -1,0 +1,65 @@
+Stiahnutie a spustenie
+
+1. Stiahnut baliky:
+cd ~/catkin_ws/src
+git clone https://github.com/MichalDobis/Universal_Robots_ROS_Driver # pouzit branch master
+git clone https://github.com/MichalDobis/universal_robot # pouzit branch melodic-devel
+cd universal_robot
+git checkout melodic-devel
+
+2. Skompilovat
+cd ~/catkin_ws
+catkin_make
+
+3. Nakonfigurovat robot
+https://github.com/MichalDobis/Universal_Robots_ROS_Driver/blob/master/ur_robot_driver/doc/install_urcap_e_series.md
+
+4. Spustanie 
+roslaunch ur5_e_moveit_config demo.launch # Spusti moveit config robota aj s modelom
+roslaunch ur_robot_driver ur5e_bringup.launch # Spusti komunikaciu s robotom aj s kontrolermi
+
+
+Dalsie dolezite veci, ktore som spravil a su commitnute. Cize staci iba git clone
+
+PC IP:
+Nastavit siet na: 192.168.0.1
+
+Nastavit IP robota v ur_robot_driver/launch/ur5e_bringup.launch
+-  <arg name="robot_ip" doc="IP address by which the robot can be reached."/>
++  <arg name="robot_ip" default="192.168.0.5" doc="IP address by which the robot can be reached."/>
+
+
+zmenit
+/ur5_e_moveit_config/config/controllers.yaml
+
+-    action_ns: follow_joint_trajectory
++    action_ns: /scaled_pos_traj_controller/follow_joint_trajectory
+
+
+zakomentovat v ur5_e_moveit_config/launch/demo.launch - joint state publisher bude vytvoreny driverom
+
+-  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
++  <!--node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+     <param name="/use_gui" value="false"/> 
+     <rosparam param="/source_list">[/move_group/fake_controller_joint_states]</rosparam>
+-  </node>
++  </node-->
+
+zmenit v ur5_e_moveit_config/launch/demo.launch b/ur5_e_moveit_config/launch/demo.launch
+-    <arg name="fake_execution" value="true"/>
++    <arg name="fake_execution" value="false"/>
+
+
+zakomentovat v  ur_robot_driver/launch/ur_common.launch - Robot description sa nahra v ur5_e_moveit_config/launch/demo.launch
+
+-  <include file="$(arg robot_description_file)">
++  <!--include file="$(arg robot_description_file)">
+     <arg name="limited" value="$(arg limited)"/>
+     <arg name="kinematics_config" value="$(arg kinematics_config)"/>
+-  </include>
++  </include-->
+
+-  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
++  <!--node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/-->
+
+
